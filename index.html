@@ -17,6 +17,7 @@
                 <a href="#cursos">Cursos</a>
                 <a href="#resources">Recursos</a>
                 <a href="#about">Sobre</a>
+            </nav>
 
             <button class="community-btn" id="communityBtn">
                 Entrar na Comunidade ↗
@@ -345,7 +346,7 @@
             var script = document.createElement("script");
             script.src = PASTA_BUILD + "/WebGL.loader.js";
             script.onerror = function () {
-                mostrarErro("Build não encontrada em "" + PASTA_BUILD + "". Coloque a pasta simulador/ na raiz do projeto.");
+                mostrarErro("Build não encontrada em '" + PASTA_BUILD + "'. Coloque a pasta simulador/ na raiz do projeto.");
             };
             script.onload = function () {
                 createUnityInstance(canvas, {

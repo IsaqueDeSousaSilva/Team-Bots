@@ -574,6 +574,7 @@ button {
     position: relative;
     width: 100%;
     aspect-ratio: 16 / 9;
+    min-height: 360px;
     background: #0d0e11;
     border: 1px solid #4b89ff;
     border-radius: 14px;
