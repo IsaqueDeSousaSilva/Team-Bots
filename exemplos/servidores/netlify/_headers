@@ -1,0 +1,15 @@
+# Netlify — coloque este arquivo na RAIZ da pasta publicada do site (a mesma do index.html principal).
+# Opcional: sem ele a build também funciona (a Unity descompacta sozinha, só um pouco mais devagar).
+# Se a build estiver em outra pasta, ajuste o caminho das três regras.
+
+/simulador/Build/WebGL.wasm.unityweb
+  Content-Encoding: gzip
+  Content-Type: application/wasm
+
+/simulador/Build/WebGL.framework.js.unityweb
+  Content-Encoding: gzip
+  Content-Type: application/javascript
+
+/simulador/Build/WebGL.data.unityweb
+  Content-Encoding: gzip
+  Content-Type: application/octet-stream

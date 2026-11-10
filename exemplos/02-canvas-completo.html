@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<!--
+  EXEMPLO 2 — CANVAS COMPLETO (recomendado para o site)
+  Tem: área responsiva 16:9, barra de carregamento, mensagem de erro, botão de tela cheia,
+  foco do teclado e aviso para celular. Copie o bloco "SIMULADOR" (HTML + CSS + JS) para a sua página.
+
+  Estrutura esperada no servidor:
+    02-canvas-completo.html
+    simulador/Build/   (os 4 arquivos da build)
+  Se a pasta da build tiver outro nome ou outro lugar, mude apenas a constante PASTA_BUILD lá embaixo.
+-->
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Simulador de Eletrônica 2D</title>
+  <style>
+    body { margin: 0; font: 16px/1.5 system-ui, "Segoe UI", Roboto, Arial, sans-serif; background: #F3F5F9; color: #1C2330; }
+    .conteudo { max-width: 1280px; margin: 0 auto; padding: 24px 16px; }
+
+    /* ===== SIMULADOR: CSS ===== */
+    .simulador {
+      position: relative;          /* a camada de carregamento fica por cima do canvas */
+      width: 100%;
+      aspect-ratio: 16 / 9;        /* a altura acompanha a largura */
+      min-height: 360px;
+      background: #0F1218;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    .simulador canvas { display: block; width: 100%; height: 100%; outline: none; }
+    .simulador-camada {
+      position: absolute; inset: 0;
+      display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px;
+      color: #E8ECF4; text-align: center; padding: 16px;
+    }
+    .simulador-barra { width: min(360px, 70%); height: 10px; border-radius: 5px; background: #222A37; overflow: hidden; }
+    .simulador-barra > div { width: 0; height: 100%; background: #33A06B; transition: width .2s; }
+    .simulador-erro { color: #FFB4B4; max-width: 560px; }
+    .simulador-acoes { margin-top: 10px; display: flex; gap: 8px; }
+    .simulador-acoes button { font: inherit; padding: 6px 14px; border-radius: 6px; border: 1px solid #C9D2DD; background: #fff; cursor: pointer; }
+    .simulador-acoes button:disabled { opacity: .5; cursor: default; }
+    /* ===== fim do CSS ===== */
+  </style>
+</head>
+<body>
+  <div class="conteudo">
+    <h1>Simulador de Eletrônica 2D</h1>
+    <p>Exemplo de página do site com o simulador incorporado num canvas.</p>
+
+    <!-- ===== SIMULADOR: HTML ===== -->
+    <div class="simulador" id="simulador-area">
+      <!-- tabindex="-1" deixa o canvas receber o foco do teclado (atalhos Delete, R, Ctrl+Z, Esc) -->
+      <canvas id="unity-canvas" tabindex="-1"></canvas>
+      <div class="simulador-camada" id="simulador-camada">
+        <strong>Simulador de Eletrônica 2D</strong>
+        <div class="simulador-barra"><div id="simulador-barra"></div></div>
+        <small id="simulador-texto">Carregando…</small>
+      </div>
+    </div>
+    <div class="simulador-acoes">
+      <button id="simulador-tela-cheia" disabled>Tela cheia</button>
+    </div>
+    <!-- ===== fim do HTML ===== -->
+
+    <p>Campo de texto da página, para conferir que o teclado continua funcionando fora do simulador:</p>
+    <input type="text" id="campo-teste" placeholder="Digite aqui" style="font: inherit; padding: 6px 10px; width: 280px">
+  </div>
+
+  <!-- ===== SIMULADOR: JavaScript ===== -->
+  <script>
+    (function () {
+      // Caminho da pasta Build, relativo a ESTA página (ou absoluto, começando com "/").
+      var PASTA_BUILD = "simulador/Build";
+
+      var canvas = document.getElementById("unity-canvas");
+      var camada = document.getElementById("simulador-camada");
+      var barra = document.getElementById("simulador-barra");
+      var texto = document.getElementById("simulador-texto");
+      var botaoTelaCheia = document.getElementById("simulador-tela-cheia");
+
+      function mostrarErro(mensagem) {
+        camada.style.display = "flex";
+        camada.innerHTML = '<strong>Não foi possível abrir o simulador</strong>' +
+          '<div class="simulador-erro"></div>';
+        camada.querySelector(".simulador-erro").textContent = mensagem;
+      }
+
+      // O simulador foi feito para computador (mouse e teclado).
+      if (/Android|iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        mostrarErro("O simulador funciona apenas em computador, com mouse e teclado.");
+        return;
+      }
+
+      // A Unity escuta o teclado da página INTEIRA e bloqueia teclas como Backspace, Tab e setas.
+      // Sem este trecho, os campos de texto do site (busca, formulários) param de funcionar direito.
+      // Ele precisa ser registrado ANTES de carregar o WebGL.loader.js.
+      ["keydown", "keyup", "keypress"].forEach(function (tipo) {
+        window.addEventListener(tipo, function (e) {
+          var alvo = e.target;
+          var campoDeTexto = alvo.tagName === "INPUT" || alvo.tagName === "TEXTAREA" ||
+                             alvo.tagName === "SELECT" || alvo.isContentEditable;
+          if (campoDeTexto) e.stopImmediatePropagation(); // a tecla fica só com o campo, a Unity não a recebe
+        }, true);
+      });
+
+      // Carrega o WebGL.loader.js e, quando terminar, cria o simulador.
+      var script = document.createElement("script");
+      script.src = PASTA_BUILD + "/WebGL.loader.js";
+      script.onerror = function () {
+        mostrarErro("Arquivo não encontrado: " + script.src + ". Confira o caminho da pasta Build.");
+      };
+      script.onload = function () {
+        createUnityInstance(canvas, {
+          dataUrl: PASTA_BUILD + "/WebGL.data.unityweb",
+          frameworkUrl: PASTA_BUILD + "/WebGL.framework.js.unityweb",
+          codeUrl: PASTA_BUILD + "/WebGL.wasm.unityweb",
+          companyName: "DefaultCompany",
+          productName: "Simulador de Eletrônica 2D",
+          productVersion: "1.0",
+          // Avisos da Unity (erros e alertas) chegam aqui. Erros também aparecem no console (F12).
+          showBanner: function (mensagem, tipo) {
+            if (tipo === "error") mostrarErro(mensagem);
+            else console.warn("[simulador]", mensagem);
+          },
+        }, function (progresso) {
+          // progresso vai de 0 a 1
+          barra.style.width = Math.round(progresso * 100) + "%";
+          texto.textContent = "Carregando… " + Math.round(progresso * 100) + "%";
+        }).then(function (instancia) {
+          window.simulador = instancia;          // útil para testes pelo console
+          camada.style.display = "none";
+          botaoTelaCheia.disabled = false;
+          botaoTelaCheia.onclick = function () { instancia.SetFullscreen(1); };
+          canvas.focus();
+          // Clicar no simulador devolve o foco do teclado para ele.
+          canvas.addEventListener("pointerdown", function () { canvas.focus(); });
+        }).catch(function (erro) {
+          mostrarErro(String(erro));
+        });
+      };
+      document.body.appendChild(script);
+    })();
+  </script>
+  <!-- ===== fim do JavaScript ===== -->
+</body>
+</html>

@@ -170,6 +170,38 @@
             </div>
         </section>
 
+        <!-- ===== SIMULADOR: HTML ===== -->
+        <section class="simulator-section container" id="cursos">
+            <div class="section-heading">
+                <div>
+                    <span class="small-title">INTERATIVO</span>
+                    <h2>Simulador de Eletrônica 2D</h2>
+                </div>
+            </div>
+
+            <div class="simulator-wrapper" id="simulador-area">
+                <canvas id="unity-canvas" tabindex="-1"></canvas>
+
+                <div class="sim-loading" id="sim-loading">
+                    <span id="sim-status">Carregando…</span>
+                    <div class="sim-progress-bar">
+                        <div class="sim-progress-fill" id="sim-progress"></div>
+                    </div>
+                </div>
+
+                <div class="sim-error" id="sim-error"></div>
+
+                <div class="sim-mobile-warning">
+                    Este simulador funciona apenas em computador (mouse e teclado).
+                </div>
+            </div>
+
+            <div class="sim-toolbar">
+                <button class="sim-fullscreen-btn" id="sim-fullscreen-btn" disabled>Tela cheia ⤢</button>
+            </div>
+        </section>
+        <!-- ===== FIM SIMULADOR: HTML ===== -->
+
         <section class="benefits-section">
             <div class="container">
                 <div class="benefits-grid">
@@ -280,5 +312,70 @@
     <div class="toast" id="toast"></div>
 
     <script src="script.js"></script>
+
+    <!-- ===== SIMULADOR: JavaScript ===== -->
+    <script>
+        (function () {
+            var PASTA_BUILD = "simulador/Build";
+
+            var canvas        = document.getElementById("unity-canvas");
+            var loading       = document.getElementById("sim-loading");
+            var status        = document.getElementById("sim-status");
+            var progress      = document.getElementById("sim-progress");
+            var errorBox      = document.getElementById("sim-error");
+            var fullscreenBtn = document.getElementById("sim-fullscreen-btn");
+
+            function mostrarErro(msg) {
+                errorBox.textContent = msg;
+                errorBox.classList.add("visible");
+                loading.classList.add("hidden");
+            }
+
+            if (/Android|iPhone|iPad|iPod/i.test(navigator.userAgent)) return;
+
+            ["keydown", "keyup", "keypress"].forEach(function (tipo) {
+                window.addEventListener(tipo, function (e) {
+                    var alvo = e.target;
+                    var campo = alvo.tagName === "INPUT" || alvo.tagName === "TEXTAREA" ||
+                                alvo.tagName === "SELECT" || alvo.isContentEditable;
+                    if (campo) e.stopImmediatePropagation();
+                }, true);
+            });
+
+            var script = document.createElement("script");
+            script.src = PASTA_BUILD + "/WebGL.loader.js";
+            script.onerror = function () {
+                mostrarErro("Build não encontrada em "" + PASTA_BUILD + "". Coloque a pasta simulador/ na raiz do projeto.");
+            };
+            script.onload = function () {
+                createUnityInstance(canvas, {
+                    dataUrl:        PASTA_BUILD + "/WebGL.data.unityweb",
+                    frameworkUrl:   PASTA_BUILD + "/WebGL.framework.js.unityweb",
+                    codeUrl:        PASTA_BUILD + "/WebGL.wasm.unityweb",
+                    companyName:    "DefaultCompany",
+                    productName:    "Simulador de Eletrônica 2D",
+                    productVersion: "1.0",
+                    showBanner: function (msg, tipo) {
+                        if (tipo === "error") mostrarErro(msg);
+                        else console.warn("[simulador]", msg);
+                    }
+                }, function (progresso) {
+                    progress.style.width = Math.round(progresso * 100) + "%";
+                    status.textContent = "Carregando… " + Math.round(progresso * 100) + "%";
+                }).then(function (instancia) {
+                    window.simulador = instancia;
+                    loading.classList.add("hidden");
+                    fullscreenBtn.disabled = false;
+                    fullscreenBtn.onclick = function () { instancia.SetFullscreen(1); };
+                    canvas.focus();
+                    canvas.addEventListener("pointerdown", function () { canvas.focus(); });
+                }).catch(function (erro) {
+                    mostrarErro(String(erro));
+                });
+            };
+            document.body.appendChild(script);
+        })();
+    </script>
+    <!-- ===== FIM SIMULADOR: JavaScript ===== -->
 </body>
 </html>

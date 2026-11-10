@@ -1,0 +1,9 @@
+# Claude Code
+.claude/
+
+# Docs internos (manter apenas README.md)
+*.md
+!README.md
+
+# Build do Unity (deve ser fornecida separadamente)
+simulador/
