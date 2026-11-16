@@ -5,8 +5,3 @@
 *.md
 !README.md
 
-# Build do Unity (deve ser fornecida separadamente)
-simulador/
-
-# Exemplos de integração (referência local, não publicar)
-exemplos/
