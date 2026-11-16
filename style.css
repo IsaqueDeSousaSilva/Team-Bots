@@ -565,6 +565,136 @@ button {
     opacity: 1;
 }
 
+/* ===== SIMULADOR: CSS ===== */
+.simulator-section {
+    padding: 80px 0;
+}
+
+.simulator-wrapper {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    min-height: 360px;
+    background: #0d0e11;
+    border: 1px solid #4b89ff;
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 0 28px rgba(75, 137, 255, 0.18);
+}
+
+.simulator-wrapper canvas {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+.sim-loading {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    background: #0d0e11;
+    transition: opacity 0.4s;
+}
+
+.sim-loading.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.sim-loading span {
+    color: #aac2ff;
+    font-size: 14px;
+    letter-spacing: 1px;
+}
+
+.sim-progress-bar {
+    width: 260px;
+    height: 5px;
+    background: #252630;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.sim-progress-fill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, #4b89ff, #ef5d78);
+    border-radius: 10px;
+    transition: width 0.2s;
+}
+
+.sim-error {
+    display: none;
+    position: absolute;
+    inset: 0;
+    align-items: center;
+    justify-content: center;
+    background: #0d0e11;
+    color: #e04b64;
+    font-size: 15px;
+    text-align: center;
+    padding: 20px;
+}
+
+.sim-error.visible {
+    display: flex;
+}
+
+.sim-mobile-warning {
+    display: none;
+    position: absolute;
+    inset: 0;
+    align-items: center;
+    justify-content: center;
+    background: #0d0e11;
+    color: #aaa;
+    font-size: 14px;
+    text-align: center;
+    padding: 20px;
+}
+
+.sim-toolbar {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 10px;
+}
+
+.sim-fullscreen-btn {
+    background: transparent;
+    border: 1px solid #4b89ff;
+    color: #aac2ff;
+    border-radius: 6px;
+    padding: 7px 14px;
+    font-size: 13px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.sim-fullscreen-btn:hover:not(:disabled) {
+    background: rgba(75, 137, 255, 0.12);
+}
+
+.sim-fullscreen-btn:disabled {
+    opacity: 0.4;
+    cursor: default;
+}
+
+@media (max-width: 800px) {
+    .sim-mobile-warning {
+        display: flex;
+    }
+
+    .sim-loading,
+    .simulator-wrapper canvas {
+        display: none;
+    }
+}
+/* ===== FIM SIMULADOR: CSS ===== */
+
 @media (max-width: 800px) {
     .nav {
         min-height: 75px;

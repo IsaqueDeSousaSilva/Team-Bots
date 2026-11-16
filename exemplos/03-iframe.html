@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<!--
+  EXEMPLO 3 — IFRAME
+  Use quando a plataforma do site só aceita incorporar conteúdo por iframe (ex.: alguns construtores de site,
+  Google Sites, Moodle) ou quando o simulador precisar ficar isolado do resto da página.
+
+  Estrutura esperada no servidor:
+    03-iframe.html
+    ../simulador/index.html   (a página que vem junto com a build)
+    simulador/Build/       (os 4 arquivos da build)
+-->
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Simulador de Eletrônica 2D (iframe)</title>
+  <style>
+    body { margin: 0; font: 16px/1.5 system-ui, "Segoe UI", Roboto, Arial, sans-serif; background: #F3F5F9; color: #1C2330; }
+    .conteudo { max-width: 1280px; margin: 0 auto; padding: 24px 16px; }
+    /* O iframe ocupa a largura disponível e mantém a proporção 16:9. */
+    .simulador-iframe { display: block; width: 100%; aspect-ratio: 16 / 9; min-height: 360px; border: 0; border-radius: 10px; background: #0F1218; }
+  </style>
+</head>
+<body>
+  <div class="conteudo">
+    <h1>Simulador de Eletrônica 2D</h1>
+    <p>Exemplo de página do site com o simulador incorporado por iframe.</p>
+
+    <!--
+      allow="fullscreen"   permite a tela cheia
+      NÃO use o atributo sandbox. Se a plataforma obrigar, ele precisa ter no mínimo:
+      sandbox="allow-scripts allow-same-origin allow-downloads allow-pointer-lock"
+      (allow-downloads é necessário para o botão Salvar do simulador baixar o arquivo .simu)
+    -->
+    <iframe class="simulador-iframe" id="simulador-iframe"
+            src="../simulador/index.html"
+            title="Simulador de Eletrônica 2D"
+            allow="fullscreen"></iframe>
+
+    <p><button id="tela-cheia" style="font: inherit; padding: 6px 14px">Tela cheia</button></p>
+  </div>
+  <script>
+    document.getElementById("tela-cheia").onclick = function () {
+      document.getElementById("simulador-iframe").requestFullscreen();
+    };
+  </script>
+</body>
+</html>

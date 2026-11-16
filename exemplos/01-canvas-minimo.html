@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<!--
+  EXEMPLO 1 — O MÍNIMO QUE FUNCIONA (canvas)
+  Estrutura esperada no servidor:
+    01-canvas-minimo.html      (esta página)
+    ../simulador/Build/WebGL.loader.js
+    ../simulador/Build/WebGL.data.unityweb
+    ../simulador/Build/WebGL.framework.js.unityweb
+    ../simulador/Build/WebGL.wasm.unityweb
+-->
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <title>Simulador — exemplo mínimo</title>
+  <style>
+    /* O canvas PRECISA ter tamanho definido no CSS. Sem altura, ele fica com 0 px e nada aparece. */
+    #unity-canvas { display: block; width: 960px; height: 540px; background: #0F1218; }
+  </style>
+</head>
+<body>
+  <canvas id="unity-canvas" tabindex="-1"></canvas>
+
+  <!-- 1º: o carregador da Unity. Ele cria a função createUnityInstance. -->
+  <script src="../simulador/Build/WebGL.loader.js"></script>
+
+  <!-- 2º: inicia o simulador dentro do canvas. -->
+  <script>
+    createUnityInstance(document.querySelector("#unity-canvas"), {
+      dataUrl: "../simulador/Build/WebGL.data.unityweb",
+      frameworkUrl: "../simulador/Build/WebGL.framework.js.unityweb",
+      codeUrl: "../simulador/Build/WebGL.wasm.unityweb",
+      companyName: "DefaultCompany",
+      productName: "Simulador de Eletrônica 2D",
+      productVersion: "1.0",
+    }).then(function (instance) {
+      window.simulador = instance;
+    }).catch(function (erro) {
+      alert("O simulador não carregou: " + erro);
+    });
+  </script>
+</body>
+</html>

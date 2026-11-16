@@ -1,0 +1,23 @@
+# Apache — coloque este arquivo DENTRO da pasta simulador/Build/
+# Faz o navegador descompactar os arquivos .unityweb sozinho (carregamento mais rápido).
+# Requer os módulos mod_mime e mod_headers (vêm ativos na maioria das hospedagens).
+
+<IfModule mod_mime.c>
+  # Os arquivos .unityweb já estão compactados com gzip: só avisamos o navegador.
+  AddEncoding gzip .unityweb
+
+  <FilesMatch "\.data\.unityweb$">
+    ForceType application/octet-stream
+  </FilesMatch>
+  <FilesMatch "\.wasm\.unityweb$">
+    ForceType application/wasm
+  </FilesMatch>
+  <FilesMatch "\.js\.unityweb$">
+    ForceType application/javascript
+  </FilesMatch>
+</IfModule>
+
+# Impede que o servidor compacte de novo um arquivo que já está compactado.
+<IfModule mod_deflate.c>
+  SetEnvIfNoCase Request_URI \.unityweb$ no-gzip dont-vary
+</IfModule>
