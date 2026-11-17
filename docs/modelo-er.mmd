@@ -1,0 +1,134 @@
+erDiagram
+    escolas ||--o{ turmas : "tem"
+    turmas ||--o{ usuarios : "agrupa alunos"
+    usuarios ||--o{ sessoes : "abre"
+    disciplinas ||--o{ cursos : "classifica"
+    cursos ||--|{ aulas : "contém"
+    usuarios ||--o{ matriculas : "faz"
+    cursos ||--o{ matriculas : "recebe"
+    usuarios ||--o{ progresso_aulas : "conclui"
+    aulas ||--o{ progresso_aulas : "é concluída em"
+    usuarios ||--o{ forum_topicos : "abre"
+    forum_topicos ||--o{ forum_comentarios : "recebe"
+    usuarios ||--o{ forum_comentarios : "escreve"
+    forum_comentarios ||--o{ forum_comentarios : "responde"
+    usuarios ||--o{ simulador_projetos : "salva"
+    usuarios ||--o{ ia_conversas : "inicia"
+    aulas |o--o{ ia_conversas : "contexto"
+    ia_conversas ||--o{ ia_mensagens : "contém"
+    disciplinas |o--o{ ia_documentos : "classifica"
+    usuarios |o--o{ ia_documentos : "aprova"
+
+    escolas {
+        int id PK
+        text nome UK
+        text cidade
+        text uf
+        text rede
+        text status_parceria
+    }
+    turmas {
+        int id PK
+        int escola_id FK
+        text nome
+        text etapa
+        int ano_letivo
+        text codigo_convite UK
+    }
+    usuarios {
+        int id PK
+        text nome_exibicao
+        text login UK
+        text email UK "opcional"
+        text senha_hash
+        text papel
+        int turma_id FK
+        int ativo
+    }
+    sessoes {
+        text token_hash PK
+        int usuario_id FK
+        text expira_em
+    }
+    disciplinas {
+        int id PK
+        text slug UK
+        text nome
+    }
+    cursos {
+        int id PK
+        int disciplina_id FK
+        text slug UK
+        text titulo
+        text etapa
+        int publicado
+    }
+    aulas {
+        int id PK
+        int curso_id FK
+        int ordem
+        text titulo
+        text tipo
+        text recurso_url
+    }
+    matriculas {
+        int usuario_id PK, FK
+        int curso_id PK, FK
+    }
+    progresso_aulas {
+        int usuario_id PK, FK
+        int aula_id PK, FK
+        text concluido_em
+    }
+    forum_topicos {
+        int id PK
+        text titulo
+        int autor_id FK
+    }
+    forum_comentarios {
+        int id PK
+        int topico_id FK
+        int autor_id FK
+        int resposta_a FK
+        text texto
+        int oculto
+    }
+    simulador_projetos {
+        int id PK
+        int usuario_id FK
+        text titulo
+        text versao_simulador
+        text arquivo_simu
+    }
+    ia_documentos {
+        int id PK
+        int disciplina_id FK
+        text titulo
+        text fonte
+        int aprovado_por FK
+    }
+    ia_conversas {
+        int id PK
+        int usuario_id FK
+        int aula_id FK
+    }
+    ia_mensagens {
+        int id PK
+        int conversa_id FK
+        text autor
+        text texto
+    }
+    conteudos {
+        int id PK
+        text titulo
+        text cor
+        text imagem
+        text publicado_em
+        int visivel
+    }
+    faq {
+        int id PK
+        text pergunta UK
+        text resposta
+        int ordem UK
+    }

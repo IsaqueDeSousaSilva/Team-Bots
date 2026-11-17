@@ -1,0 +1,13 @@
+{
+  "name": "team-bots-backend",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "API e banco de dados da plataforma Team Bots (extensão UNIUBE)",
+  "engines": { "node": ">=22.13.0" },
+  "scripts": {
+    "start": "node server.mjs",
+    "test": "node --test tests/api.test.mjs",
+    "banco:recriar": "node scripts/recriar-banco.mjs"
+  }
+}

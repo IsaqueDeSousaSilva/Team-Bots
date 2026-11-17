@@ -4,7 +4,7 @@ Site do projeto de extensão da Team Bots — comunidade de tecnologia focada em
 
 ## Stack
 
-HTML, CSS e JavaScript puros — sem framework, sem build tool, sem package manager.
+HTML, CSS e JavaScript puros no site. O servidor e a API usam Node.js 22.13 ou superior com SQLite integrado, sem dependências de npm. O simulador usa a build Unity WebGL já versionada.
 
 ---
 
@@ -15,12 +15,13 @@ Team-Bots/
 ├── index.html            Página principal (única página do site)
 ├── style.css             Todos os estilos (tema escuro, responsivo, animações)
 ├── script.js             Interações: menu mobile, acordeão FAQ, toast de comunidade
-├── servidor-teste.py     Servidor local com headers corretos para o Unity WebGL
-├── GUIA-INTEGRACAO-WEB.md  Documentação técnica da integração do simulador
+├── servidor-teste.py     Servidor estático de teste da build Unity
+├── api.js / banco.css   Cursos, login e progresso no site
+├── backend/             API, schema SQLite, scripts e testes
+├── docs/                Modelo de dados e documentação da API
 │
-└── simulador/            Build Unity WebGL — NÃO commitada (ver .gitignore)
+└── simulador/            Build Unity WebGL versionada
     ├── index.html        Página standalone do simulador (abre em iframe ou direto)
-    ├── LEIA-ME.md        Notas da build (versão Unity, tamanhos, instruções)
     └── Build/
         ├── WebGL.loader.js           Carregador da Unity (~47 KB)
         ├── WebGL.framework.js.unityweb  Runtime JS (~90 KB, gzip)
@@ -28,13 +29,22 @@ Team-Bots/
         └── WebGL.data.unityweb       Assets do jogo (~4,8 MB, gzip)
 ```
 
-> **Pastas ignoradas pelo git:** `simulador/` e `exemplos/` estão no `.gitignore` e não são versionadas.
+O arquivo SQLite fica em `backend/data/` e é criado no primeiro uso.
 
 ---
 
 ## Como rodar localmente
 
-**Nunca abra `index.html` com dois cliques.** O simulador usa `fetch()`, que navegadores bloqueiam em URLs `file://`. Use sempre o servidor:
+A versão com cursos, cadastro, progresso e Unity roda pelo Node:
+
+```bash
+node backend/server.mjs --demo
+node --test backend/tests/api.test.mjs
+```
+
+Abra `http://127.0.0.1:3000/`. No Windows, `INICIAR.cmd` inicia o servidor. A demonstração usa banco próprio e a conta `aluno.demo` com a senha de demonstração definida em `backend/db.mjs`.
+
+Para testar apenas a versão estática do site e o simulador:
 
 ```bash
 python servidor-teste.py
@@ -72,6 +82,7 @@ O servidor escuta em `127.0.0.1` (IPv4) **e** `::1` (IPv6) ao mesmo tempo, garan
 |---|---|---|
 | Hero | `#home` | Título, subtítulo e botões de ação |
 | Notícias / Recursos | `#resources` | Grade de cards + fórum lateral |
+| Cursos | `#cursos-online` | Catálogo, materiais, videoaulas e progresso |
 | Simulador | `#cursos` | Canvas Unity WebGL interativo |
 | Benefícios | — | Três cards: Conexão, Hub, Cursos |
 | FAQ | `#about` | Acordeão de perguntas frequentes |
@@ -143,8 +154,16 @@ Todos os caminhos são relativos à raiz do site (`PASTA_BUILD = "simulador/Buil
 
 ---
 
-## Obter a build do simulador
+## Cadastrar uma videoaula
 
-A pasta `simulador/` não está no repositório. Para obtê-la, descompacte o arquivo `SimuladorTeamBotsWEBGL.zip` na raiz do projeto mantendo a estrutura indicada acima.
+```bash
+node backend/scripts/cadastrar-videoaula.mjs --demo primeiros-circuitos 6 "Título da aula" "https://exemplo.org/video" "Resumo opcional"
+```
 
-Com o servidor rodando e a build no lugar, acesse `http://localhost:8000/` e confirme que a seção **Simulador de Eletrônica 2D** carrega sem erros no console (F12).
+Substitua a URL pelo endereço aprovado. O comando aceita um curso existente e uma posição livre ou já ocupada por uma videoaula. Atualizações preservam o ID da aula e o progresso registrado. O site abre o vídeo em uma nova guia. Use o mesmo modo (`--demo` ou sem essa opção) e a mesma variável `BANCO` do servidor.
+
+## Publicação
+
+Para rodar fora do modo de demonstração, use `node backend/server.mjs`. Configure `PORTA` e `HOST` para o ambiente, coloque a aplicação atrás de HTTPS e aponte `BANCO` para um arquivo em volume persistente. A versão atual usa um processo Node com SQLite em disco, e precisa de hospedagem compatível. A migração para um banco remoto ou funções do Netlify depende da escolha de hospedagem do grupo.
+
+Consulte o [guia de arquitetura e operação](docs/ARQUITETURA-E-OPERACAO.md), [a API](docs/API.md) e [o modelo de dados](docs/BANCO-DE-DADOS.md).

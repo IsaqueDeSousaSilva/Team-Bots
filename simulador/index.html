@@ -7,7 +7,7 @@
     <style>
       html, body { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background: #0F1218; }
       /* O canvas ocupa toda a janela (ou todo o iframe onde a página for incorporada). */
-      #unity-canvas { display: block; width: 100%; height: 100%; background: #0F1218; outline: none; }
+      #unity-canvas { position: absolute; inset: 0; display: block; width: 100%; height: 100%; background: #0F1218; outline: none; }
       #loading {
         position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center;
         gap: 18px; color: #E8ECF4; font: 600 20px/1.3 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
@@ -49,6 +49,8 @@
         companyName: "DefaultCompany",
         productName: "Simulador de Eletrônica 2D",
         productVersion: "1.0",
+        matchWebGLToCanvasSize: true,
+        devicePixelRatio: Math.max(window.devicePixelRatio || 1, 1.5),
         showBanner: showBanner,
       };
 

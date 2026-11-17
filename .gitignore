@@ -4,4 +4,16 @@
 # Docs internos (manter apenas README.md)
 *.md
 !README.md
+!docs/BANCO-DE-DADOS.md
+!docs/API.md
+!docs/ARQUITETURA-E-OPERACAO.md
+
+# Estado local do banco e configuração
+backend/data/
+*.sqlite
+*.sqlite-wal
+*.sqlite-shm
+.env
+.env.*
+__pycache__/
 
