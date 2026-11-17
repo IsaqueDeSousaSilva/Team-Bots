@@ -15,6 +15,7 @@ Para parar: Ctrl+C no terminal.
 """
 import http.server
 import os
+from pathlib import Path
 import socket
 import sys
 import threading
@@ -24,9 +25,24 @@ TIPOS = {
     ".js.unityweb":   "application/javascript",
     ".data.unityweb": "application/octet-stream",
 }
+ARQUIVOS_PUBLICOS = {
+    "index.html", "style.css", "script.js", "api.js", "banco.css", "simulador/index.html",
+    "simulador/Build/WebGL.loader.js", "simulador/Build/WebGL.wasm.unityweb",
+    "simulador/Build/WebGL.framework.js.unityweb", "simulador/Build/WebGL.data.unityweb",
+}
 
 
 class Handler(http.server.SimpleHTTPRequestHandler):
+    def send_head(self):
+        raiz = Path(self.directory).resolve()
+        destino = Path(self.translate_path(self.path)).resolve()
+        if destino in (raiz, raiz / "simulador"):
+            destino = destino / "index.html"
+        if not destino.is_relative_to(raiz) or destino.relative_to(raiz).as_posix() not in ARQUIVOS_PUBLICOS:
+            self.send_error(404)
+            return None
+        return super().send_head()
+
     def end_headers(self):
         # Necessário para SharedArrayBuffer (Unity 6 WebGL multi-thread)
         self.send_header("Cross-Origin-Opener-Policy", "same-origin")

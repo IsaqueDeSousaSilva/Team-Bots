@@ -1,0 +1,112 @@
+/* Estilos das partes novas ligadas ao banco (cursos, comentários, cadastro).
+   Usa as mesmas cores do style.css. Tudo com prefixo "tb-" para não
+   conflitar com as classes que já existem. */
+
+[hidden] { display: none !important; }
+
+.tb-clicavel { cursor: pointer; }
+
+.tb-campo {
+    width: 100%;
+    padding: 11px 12px;
+    border: 1px solid #3a3f4b;
+    border-radius: 8px;
+    background: #14151a;
+    color: #f2f2f2;
+    font: inherit;
+    font-size: 14px;
+}
+.tb-campo:focus-visible,
+.tb-botao:focus-visible,
+.tb-marca:focus-visible,
+.tb-link:focus-visible,
+.tb-fechar:focus-visible { outline: 2px solid #8db9ff; outline-offset: 2px; }
+.tb-campo:disabled { opacity: 0.6; }
+
+.tb-botao {
+    margin-top: 12px;
+    padding: 9px 16px;
+    border: 1px solid #4b89ff;
+    border-radius: 8px;
+    background: transparent;
+    color: #cfe0ff;
+    font-size: 14px;
+    cursor: pointer;
+}
+.tb-botao:hover:not(:disabled) { background: rgba(75, 137, 255, 0.15); }
+.tb-botao:disabled { opacity: 0.5; cursor: default; }
+
+.tb-novo-comentario { margin-top: 16px; }
+.tb-vazio { color: #9a9a9a; font-size: 14px; }
+
+/* ---- cursos ---- */
+#cursos { padding: 80px 0 0; }
+.tb-cursos { display: grid; gap: 28px; }
+.tb-curso:hover { transform: none; }
+.tb-progresso { margin: 18px 0 8px; color: #89adff; font-size: 14px; }
+.tb-aulas ol { list-style: none; }
+.tb-aulas li {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 14px 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.07);
+}
+.tb-aulas li small { color: #9a9a9a; }
+.tb-aulas li p { margin-top: 4px; color: #bdbdbd; font-size: 14px; }
+.tb-marca {
+    flex-shrink: 0;
+    padding: 8px 12px;
+    border: 1px solid #e04b64;
+    border-radius: 8px;
+    background: transparent;
+    color: #fff;
+    font-size: 13px;
+    cursor: pointer;
+}
+.tb-marca.feita { border-color: #3fa66b; color: #8fe0b0; cursor: default; }
+
+/* ---- janela de cadastro / login ---- */
+.tb-fundo {
+    position: fixed;
+    inset: 0;
+    z-index: 300;
+    display: grid;
+    place-items: center;
+    padding: 16px;
+    background: rgba(5, 6, 9, 0.75);
+}
+.tb-janela {
+    position: relative;
+    width: min(420px, 100%);
+    padding: 28px;
+    display: grid;
+    gap: 14px;
+    background: #191a1e;
+    border: 1px solid #4b89ff;
+    border-radius: 14px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+}
+.tb-janela h3 { font-size: 22px; }
+.tb-rotulo { display: grid; gap: 6px; color: #c9c9c9; font-size: 13px; }
+.tb-erro { min-height: 18px; color: #ff8fa3; font-size: 14px; }
+.tb-confirmar { border: 0; font-size: 15px; }
+.tb-link { border: 0; background: transparent; color: #89adff; font-size: 14px; cursor: pointer; }
+.tb-fechar {
+    position: absolute;
+    top: 10px;
+    right: 14px;
+    border: 0;
+    background: transparent;
+    color: #aaa;
+    font-size: 26px;
+    line-height: 1;
+    cursor: pointer;
+}
+
+@media (max-width: 800px) {
+    .tb-aulas li { flex-direction: column; align-items: flex-start; }
+}
+#cursos-online { padding-top: 2rem; scroll-margin-top: 5rem; }
+.tb-recurso { display: inline-block; margin-top: .35rem; text-decoration: underline; }
