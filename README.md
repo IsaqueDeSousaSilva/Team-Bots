@@ -166,4 +166,4 @@ Substitua a URL pelo endereço aprovado. O comando aceita um curso existente e u
 
 Para rodar fora do modo de demonstração, use `node backend/server.mjs`. Configure `PORTA` e `HOST` para o ambiente, coloque a aplicação atrás de HTTPS e aponte `BANCO` para um arquivo em volume persistente. A versão atual usa um processo Node com SQLite em disco, e precisa de hospedagem compatível. A migração para um banco remoto ou funções do Netlify depende da escolha de hospedagem do grupo.
 
-Consulte [a API](docs/API.md) e [o modelo de dados](docs/BANCO-DE-DADOS.md).
+Consulte o [guia de arquitetura e operação](docs/ARQUITETURA-E-OPERACAO.md), [a API](docs/API.md) e [o modelo de dados](docs/BANCO-DE-DADOS.md).
