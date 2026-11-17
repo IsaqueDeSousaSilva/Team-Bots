@@ -110,3 +110,10 @@
 }
 #cursos-online { padding-top: 2rem; scroll-margin-top: 5rem; }
 .tb-recurso { display: inline-block; margin-top: .35rem; text-decoration: underline; }
+.tb-acesso { display: flex; align-items: center; gap: 10px; min-width: 0; }
+.tb-usuario { max-width: 12rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.tb-sair { margin: 0; flex-shrink: 0; }
+@media (max-width: 800px) {
+    .tb-usuario { max-width: 8rem; }
+    .tb-acesso .community-btn { padding-inline: 14px; }
+}

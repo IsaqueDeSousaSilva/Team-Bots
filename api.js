@@ -358,22 +358,33 @@
 
     function ligarBotaoComunidade() {
         var botao = document.getElementById("communityBtn");
+        var sair = document.getElementById("communityLogout");
         if (!botao) return;
         // roda antes do clique do script.js (que só mostrava o aviso de boas-vindas)
         botao.addEventListener("click", function (evento) {
             evento.stopImmediatePropagation();
-            if (!usuario) return abrirJanela();
-            api("/logout", { corpo: {} }).catch(function () { });
-            guardarToken(null);
-            usuario = null;
-            avisar("Você saiu da conta.");
-            atualizarTela();
+            abrirJanela();
         }, true);
+        sair.addEventListener("click", function () {
+            sair.disabled = true;
+            api("/logout", { corpo: {} }).then(function () {
+                guardarToken(null);
+                usuario = null;
+                avisar("Você saiu da conta.");
+                atualizarTela();
+                botao.focus();
+            }).catch(function (erro) { avisar(erro.message); })
+              .finally(function () { sair.disabled = false; });
+        });
     }
 
     function atualizarTela() {
         var botao = document.getElementById("communityBtn");
-        if (botao) botao.textContent = usuario ? "Olá, " + usuario.nome_exibicao + " · Sair" : "Entrar na Comunidade ↗";
+        var nome = document.getElementById("communityUser");
+        var sair = document.getElementById("communityLogout");
+        botao.hidden = Boolean(usuario);
+        nome.hidden = sair.hidden = !usuario;
+        nome.textContent = usuario ? "Olá, " + usuario.nome_exibicao : "";
         api("/forum/topicos").then(montarForum).catch(function () { });
         api("/cursos").then(montarCursos).catch(function () { });
     }

@@ -21,9 +21,11 @@
                 <a href="#about">Sobre</a>
             </nav>
 
-            <button class="community-btn" id="communityBtn">
-                Entrar na Comunidade ↗
-            </button>
+            <div class="tb-acesso">
+                <button type="button" class="community-btn" id="communityBtn">Entrar na Comunidade ↗</button>
+                <span id="communityUser" class="tb-usuario" hidden></span>
+                <button type="button" class="tb-botao tb-sair" id="communityLogout" hidden>Sair</button>
+            </div>
 
             <button class="menu-toggle" id="menuToggle">☰</button>
         </div>
@@ -362,6 +364,9 @@
                     companyName:    "DefaultCompany",
                     productName:    "Simulador de Eletrônica 2D",
                     productVersion: "1.0",
+                    matchWebGLToCanvasSize: true,
+                    // Mantém os textos do Unity legíveis mesmo em telas com DPR 1.
+                    devicePixelRatio: Math.max(window.devicePixelRatio || 1, 1.5),
                     showBanner: function (msg, tipo) {
                         if (tipo === "error") mostrarErro(msg);
                         else console.warn("[simulador]", msg);
